@@ -2,14 +2,10 @@ import { defineConfig, devices } from '@playwright/test';
 import { nxE2EPreset } from '@nx/playwright/preset';
 import { workspaceRoot } from '@nx/devkit';
 
+import type { E2EOptions } from './src/fixtures';
+
 // For CI, you may want to set BASE_URL to the deployed application.
 const baseURL = process.env['BASE_URL'] || 'http://localhost:4200';
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import 'dotenv/config';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -21,7 +17,7 @@ const baseURL = process.env['BASE_URL'] || 'http://localhost:4200';
  * `playwright.config.mts` via its extension list
  * (.ts/.js/.mts/.mjs/.cts/.cjs).
  */
-export default defineConfig({
+export default defineConfig<E2EOptions>({
   ...nxE2EPreset(import.meta.dirname, { testDir: './src' }),
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -36,30 +32,16 @@ export default defineConfig({
     reuseExistingServer: true,
     cwd: workspaceRoot,
   },
+  /* The demo reads the `zoneless` option in `src/main.ts` and bootstraps
+   * itself with or without zone.js. Every spec runs under both modes. */
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-
-    // Uncomment for mobile browsers support
-    /* {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      name: 'zone',
+      use: { ...devices['Desktop Chrome'], zoneless: false },
     },
     {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
-    }, */
-
-    // Uncomment for branded browsers
-    /* {
-      name: 'Microsoft Edge',
-      use: { ...devices['Desktop Edge'], channel: 'msedge' },
+      name: 'zoneless',
+      use: { ...devices['Desktop Chrome'], zoneless: true },
     },
-    {
-      name: 'Google Chrome',
-      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    } */
   ],
 });
