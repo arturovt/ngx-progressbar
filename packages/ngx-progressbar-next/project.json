@@ -50,7 +50,10 @@
           "cobertura",
           "lcov"
         ]
-      }
+      },
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectName}"
+      ]
     },
     "lint": {
       "executor": "@nx/eslint:lint"
