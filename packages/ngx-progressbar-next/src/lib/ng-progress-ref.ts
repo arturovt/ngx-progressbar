@@ -1,6 +1,7 @@
 import {
   Directive,
   inject,
+  NgZone,
   signal,
   effect,
   output,
@@ -18,7 +19,9 @@ import {
 import { outputToObservable } from '@angular/core/rxjs-interop';
 import {
   Observable,
+  Subscriber,
   Subscription,
+  MonoTypeOperatorFunction,
   BehaviorSubject,
   of,
   tap,
@@ -47,11 +50,23 @@ function maxAttribute(value: string | number): number {
   return (max > 0 && max <= 100) ? max : 100;
 }
 
+/**
+ * Subscribes to the source outside the Angular zone, so the timers it
+ * creates do not schedule change detection on every tick.
+ */
+function leaveNgZone<T>(ngZone: NgZone): MonoTypeOperatorFunction<T> {
+  return (source: Observable<T>) => new Observable<T>(
+    (subscriber: Subscriber<T>) => ngZone.runOutsideAngular(() => source.subscribe(subscriber))
+  );
+}
+
 @Directive({
   selector: '[ngProgressRef]',
   exportAs: 'ngProgressRef'
 })
 export class NgProgressRef {
+
+  private readonly ngZone: NgZone = inject(NgZone);
 
   private readonly defaultOptions: NgProgressOptions = inject(NG_PROGRESS_OPTIONS);
 
@@ -119,7 +134,11 @@ export class NgProgressRef {
    */
   start(): void {
     this.started.emit();
-    this._trigger.next(TriggerType.START);
+    // The trigger builds the trickle timer synchronously, so emitting here
+    // outside the zone keeps that timer out of change detection.
+    this.ngZone.runOutsideAngular(() => {
+      this._trigger.next(TriggerType.START);
+    });
     this._active.set(true);
   }
 
@@ -127,7 +146,9 @@ export class NgProgressRef {
    * Complete the progress
    */
   complete(): void {
-    this._trigger.next(TriggerType.COMPLETE);
+    this.ngZone.runOutsideAngular(() => {
+      this._trigger.next(TriggerType.COMPLETE);
+    });
   }
 
   /**
@@ -185,10 +206,14 @@ export class NgProgressRef {
     return of({}).pipe(
       // Complete the progress
       tap(() => this._progress.set(100)),
+      // The effect can resubscribe this chain from inside the zone, so the
+      // delays below are detached from it explicitly.
+      leaveNgZone(this.ngZone),
       // Deactivate the progress after a tiny delay
       delay(config.speed + 140),
       tap(() => this._active.set(false)),
 
+      leaveNgZone(this.ngZone),
       // Use a tiny delay before resetting
       delay(config.fadeOutSpeed),
       // Force the progress to reset even it got cancelled

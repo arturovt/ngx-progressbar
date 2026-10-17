@@ -1,5 +1,5 @@
 import type { Mock } from "vitest";
-import { Component } from '@angular/core';
+import { Component, NgZone, WritableSignal } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgProgressRef } from 'ngx-progressbar-next';
@@ -151,6 +151,47 @@ describe('NgProgressRef', () => {
 
         directive.inc(20);
         expect(incSpy).toHaveBeenCalledWith(20);
+    });
+
+    it('should run the trickle timer outside the Angular zone', async () => {
+        // Inside the zone every trickle tick would run change detection.
+        const ngZone: NgZone = TestBed.inject(NgZone);
+        const ticksInZone: boolean[] = [];
+
+        vi.spyOn(directive, 'inc').mockImplementation(() => {
+            ticksInZone.push(NgZone.isInAngularZone());
+        });
+
+        // Flush the constructor effect so the trigger stream is subscribed.
+        fixture.detectChanges();
+        ngZone.run(() => directive.start());
+
+        await afterTimeout(350);
+        expect(ticksInZone.length).toBeGreaterThan(0);
+        expect(ticksInZone).not.toContain(true);
+    });
+
+    it('should run the completion chain outside the Angular zone', async () => {
+        const ngZone: NgZone = TestBed.inject(NgZone);
+        const active: WritableSignal<boolean> = directive['_active'];
+        const setActive = active.set.bind(active);
+        const deactivatedInZone: boolean[] = [];
+
+        vi.spyOn(active, 'set').mockImplementation((value: boolean) => {
+            if (!value) {
+                deactivatedInZone.push(NgZone.isInAngularZone());
+            }
+            setActive(value);
+        });
+
+        // Flush the constructor effect so the trigger stream is subscribed.
+        fixture.detectChanges();
+        ngZone.run(() => directive.start());
+        await afterTimeout(50);
+        ngZone.run(() => directive.complete());
+
+        await afterTimeout(500);
+        expect(deactivatedInZone).toEqual([false]);
     });
 
     it('should increment the progress using set function', () => {

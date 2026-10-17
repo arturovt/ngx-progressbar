@@ -1,4 +1,4 @@
-import { Directive, inject, Type } from '@angular/core';
+import { Directive, inject, NgZone, Type } from '@angular/core';
 import { Event, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, map, tap } from 'rxjs';
@@ -21,6 +21,8 @@ class NgProgressRouterBase {
 
   readonly progressRef: NgProgressRef = inject(NgProgressRef, { host: true, self: true });
 
+  private readonly ngZone: NgZone = inject(NgZone);
+
   constructor() {
     let completeTimeout: ReturnType<typeof setTimeout>;
 
@@ -35,9 +37,13 @@ class NgProgressRouterBase {
         if (toggle) {
           this.progressRef.start();
         } else {
-          completeTimeout = setTimeout(() => {
-            this.progressRef.complete();
-          }, this.config.minDuration);
+          // Router events run inside the zone, so this timer would make
+          // change detection wait on it.
+          this.ngZone.runOutsideAngular(() => {
+            completeTimeout = setTimeout(() => {
+              this.progressRef.complete();
+            }, this.config.minDuration);
+          });
         }
       }),
       takeUntilDestroyed()
