@@ -51,12 +51,16 @@ function maxAttribute(value: string | number): number {
 }
 
 /**
- * Subscribes to the source outside the Angular zone, so the timers it
- * creates do not schedule change detection on every tick.
+ * Detaches the source from the zone both when it is subscribed and when it
+ * emits, since operators like delay build their timers on arrival.
  */
 function leaveNgZone<T>(ngZone: NgZone): MonoTypeOperatorFunction<T> {
   return (source: Observable<T>) => new Observable<T>(
-    (subscriber: Subscriber<T>) => ngZone.runOutsideAngular(() => source.subscribe(subscriber))
+    (subscriber: Subscriber<T>) => ngZone.runOutsideAngular(() => source.subscribe({
+      next: (value: T) => ngZone.runOutsideAngular(() => subscriber.next(value)),
+      error: (error: unknown) => subscriber.error(error),
+      complete: () => subscriber.complete()
+    }))
   );
 }
 
