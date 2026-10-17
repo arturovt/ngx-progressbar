@@ -1,0 +1,62 @@
+{
+  "name": "ngx-progressbar-next",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/ngx-progressbar-next/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "manifestRootsToUpdate": [
+        "dist/{projectRoot}"
+      ],
+      "currentVersionResolver": "git-tag",
+      "fallbackCurrentVersionResolver": "disk"
+    }
+  },
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": [
+        "{workspaceRoot}/dist/{projectRoot}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "project": "packages/ngx-progressbar-next/ng-package.json",
+        "tsConfig": "packages/ngx-progressbar-next/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "packages/ngx-progressbar-next/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      }
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
+    "test": {
+      "executor": "@nx/angular:unit-test",
+      "options": {
+        "watch": false,
+        "setupFiles": [
+          "packages/ngx-progressbar-next/src/test-setup.ts"
+        ],
+        "coverageReporters": [
+          "html",
+          "text-summary",
+          "cobertura",
+          "lcov"
+        ]
+      },
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectName}"
+      ]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

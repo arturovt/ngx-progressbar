@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="200px" width="200px" style="text-align: center;" src="https://raw.githubusercontent.com/arturovt/ngx-progressbar-next/master/projects/ngx-progressbar-next-demo/src/assets/logo.svg">
+  <img height="200px" width="200px" style="text-align: center;" src="https://raw.githubusercontent.com/arturovt/ngx-progressbar-next/master/apps/ngx-progressbar-next-demo/public/assets/logo.svg">
   <h1 align="center">Angular Progressbar</h1>
 </p>
 
@@ -48,13 +48,13 @@ ___
 
 ### Table of contents
 
-* [Usage](projects/ngx-progressbar-next/docs/Usage.md)
-* [Styling](projects/ngx-progressbar-next/docs/Styling.md)
-* [Global Options](projects/ngx-progressbar-next/docs/Global-options.md)
-* [Smooth Scroll Functions](projects/ngx-progressbar-next/docs/Integration.md)
+* [Usage](packages/ngx-progressbar-next/docs/Usage.md)
+* [Styling](packages/ngx-progressbar-next/docs/Styling.md)
+* [Global Options](packages/ngx-progressbar-next/docs/Global-options.md)
+* [Smooth Scroll Functions](packages/ngx-progressbar-next/docs/Integration.md)
 * Automagic features
-  * [HttpClient Requests](projects/ngx-progressbar-next/docs/HttpClient-requests.md)
-  * [Router Events](projects/ngx-progressbar-next/docs/Router-events.md)
+  * [HttpClient Requests](packages/ngx-progressbar-next/docs/HttpClient-requests.md)
+  * [Router Events](packages/ngx-progressbar-next/docs/Router-events.md)
 
 ___
 
