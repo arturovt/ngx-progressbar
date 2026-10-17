@@ -8,8 +8,7 @@ export interface NgProgressRouterOptions {
   completeEvents?: Type<Event>[];
 }
 
-export const NG_PROGRESS_ROUTER_OPTIONS: InjectionToken<NgProgressRouterOptions> = new InjectionToken<NgProgressRouterOptions>('NG_PROGRESS_ROUTER_OPTIONS', {
-  providedIn: 'root',
+export const NG_PROGRESS_ROUTER_OPTIONS: InjectionToken<NgProgressRouterOptions> = new InjectionToken<NgProgressRouterOptions>('', {
   factory: () => defaultRouterOptions
 });
 

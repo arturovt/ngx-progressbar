@@ -19,8 +19,7 @@ export type NgProgressOptions = NgProgressRefOptions & {
   spinner?: boolean;
 }
 
-export const NG_PROGRESS_OPTIONS: InjectionToken<NgProgressOptions> = new InjectionToken<NgProgressOptions>('NG_PROGRESS_OPTIONS', {
-  providedIn: 'root',
+export const NG_PROGRESS_OPTIONS: InjectionToken<NgProgressOptions> = new InjectionToken<NgProgressOptions>('', {
   factory: () => defaultOptions
 });
 

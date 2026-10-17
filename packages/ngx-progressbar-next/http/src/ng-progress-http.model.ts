@@ -5,8 +5,7 @@ export interface NgProgressHttpOptions {
   matcher?: string | undefined;
 }
 
-export const NG_PROGRESS_HTTP_OPTIONS: InjectionToken<NgProgressHttpOptions> = new InjectionToken<NgProgressHttpOptions>('NG_PROGRESS_HTTP_OPTIONS', {
-  providedIn: 'root',
+export const NG_PROGRESS_HTTP_OPTIONS: InjectionToken<NgProgressHttpOptions> = new InjectionToken<NgProgressHttpOptions>('', {
   factory: () => null
 });
 
