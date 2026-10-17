@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="200px" width="200px" style="text-align: center;" src="https://raw.githubusercontent.com/arturovt/ngx-progressbar-next/master/apps/ngx-progressbar-next-demo/public/assets/logo.svg">
+  <img height="200px" width="200px" style="text-align: center;" src="https://raw.githubusercontent.com/arturovt/ngx-progressbar-next/main/apps/ngx-progressbar-next-demo/public/assets/logo.svg">
   <h1 align="center">Angular Progressbar</h1>
 </p>
 
@@ -8,7 +8,7 @@
 [![codecov](https://codecov.io/gh/arturovt/ngx-progressbar-next/graph/badge.svg)](https://codecov.io/gh/arturovt/ngx-progressbar-next)
 [![npm](https://img.shields.io/npm/dm/ngx-progressbar-next.svg)](https://www.npmjs.com/package/ngx-progressbar-next)
 [![npm bundle size (minified + gzip)](https://img.shields.io/bundlephobia/minzip/ngx-progressbar-next.svg)](https://bundlephobia.com/result?p=ngx-progressbar-next)
-[![license](https://img.shields.io/npm/l/ngx-progressbar-next.svg)](https://github.com/arturovt/ngx-progressbar-next/blob/master/LICENSE)
+[![license](https://img.shields.io/npm/l/ngx-progressbar-next.svg)](https://github.com/arturovt/ngx-progressbar-next/blob/main/LICENSE)
 
 A nanoscopic progress bar. Featuring realistic trickle animations to convince your users that something is happening!
 
