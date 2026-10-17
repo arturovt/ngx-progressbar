@@ -1,0 +1,35 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "paths": {
+      "ngx-progressbar-next": [
+        "./packages/ngx-progressbar-next/src/public-api.ts"
+      ],
+      "ngx-progressbar-next/http": [
+        "./packages/ngx-progressbar-next/http/src/public_api.ts"
+      ],
+      "ngx-progressbar-next/router": [
+        "./packages/ngx-progressbar-next/router/src/public_api.ts"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}

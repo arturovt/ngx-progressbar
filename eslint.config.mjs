@@ -1,63 +1,46 @@
-import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import angular from 'angular-eslint';
+import nx from '@nx/eslint-plugin';
 
-export default tseslint.config(
+export default [
+  ...nx.configs['flat/base'],
+  ...nx.configs['flat/typescript'],
+  ...nx.configs['flat/javascript'],
   {
-    ignores: ['dist/**', 'coverage/**', '.angular/**']
-  },
-  {
-    files: ['**/*.ts'],
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-      ...angular.configs.tsRecommended
+    ignores: [
+      '**/dist',
+      '**/vite.config.*.timestamp*',
+      '**/vitest.config.*.timestamp*',
     ],
-    processor: angular.processInlineTemplates
   },
   {
-    files: ['projects/ngx-progressbar-next/**/*.ts'],
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
-      // The library ships selectors like ng-progress, so it uses no prefix.
-      '@angular-eslint/directive-selector': [
+      '@nx/enforce-module-boundaries': [
         'error',
-        { type: 'attribute', prefix: '', style: 'camelCase' }
+        {
+          enforceBuildableLibDependency: true,
+          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$'],
+          depConstraints: [
+            {
+              sourceTag: '*',
+              onlyDependOnLibsWithTags: ['*'],
+            },
+          ],
+        },
       ],
-      '@angular-eslint/component-selector': [
-        'error',
-        { type: 'element', prefix: '', style: 'kebab-case' }
-      ],
-      '@angular-eslint/component-class-suffix': 'off',
-      '@angular-eslint/directive-class-suffix': 'off',
-      '@angular-eslint/no-input-rename': 'off',
-      '@angular-eslint/no-output-rename': 'off',
-      '@angular-eslint/no-output-native': 'off'
-    }
+    },
   },
   {
-    files: ['projects/ngx-progressbar-next-demo/**/*.ts'],
-    rules: {
-      '@angular-eslint/directive-selector': [
-        'error',
-        { type: 'attribute', prefix: 'app', style: 'camelCase' }
-      ],
-      '@angular-eslint/component-selector': [
-        'error',
-        { type: 'element', prefix: 'app', style: 'kebab-case' }
-      ]
-    }
+    files: [
+      '**/*.ts',
+      '**/*.tsx',
+      '**/*.cts',
+      '**/*.mts',
+      '**/*.js',
+      '**/*.jsx',
+      '**/*.cjs',
+      '**/*.mjs',
+    ],
+    // Override or add rules here
+    rules: {},
   },
-  {
-    files: ['**/*.html'],
-    extends: [
-      ...angular.configs.templateRecommended,
-      ...angular.configs.templateAccessibility
-    ]
-  },
-  {
-    files: ['projects/ngx-progressbar-next/**/*.html'],
-    rules: {
-      '@angular-eslint/template/elements-content': 'off'
-    }
-  }
-);
+];
