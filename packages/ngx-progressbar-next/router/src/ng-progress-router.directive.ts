@@ -34,7 +34,7 @@ class NgProgressRouterBase {
       NG_PROGRESS_ROUTER_OPTIONS,
     );
 
-    let completeTimeout = 0;
+    let completeTimeout: ReturnType<typeof setTimeout>;
 
     // Previously in v13, we had the router events toggle converted to a signal,
     // the issue with toSignal is when the new route is loaded too fast, it won't start the progressbar, causing the tests to break.
