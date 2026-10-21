@@ -3,8 +3,10 @@ import {
   Directive,
   inject,
   NgZone,
+  PLATFORM_ID,
   type Type,
 } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
 import { type Event, Router } from '@angular/router';
 import { NgProgressRef } from 'ngx-progressbar-next';
 import { NG_PROGRESS_ROUTER_OPTIONS } from './ng-progress-router.model';
@@ -29,6 +31,14 @@ class NgProgressRouterBase {
   });
 
   constructor() {
+    // The router might break hydration since the server-rendered HTML would differ.
+    if (
+      (typeof ngServerMode !== 'undefined' && ngServerMode) ||
+      isPlatformServer(inject(PLATFORM_ID))
+    ) {
+      return;
+    }
+
     const ngZone = inject(NgZone);
     const { startEvents, completeEvents, minDuration } = inject(
       NG_PROGRESS_ROUTER_OPTIONS,
